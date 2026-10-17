@@ -1,0 +1,22 @@
+# One container serves the built client AND the WebSocket API on :8080.
+#   cp .env.example .env     # then set SESSION_SECRET (openssl rand -base64 48)
+#   docker compose up --build
+services:
+  app:
+    build: .
+    image: couchbeam:local
+    ports:
+      - "8080:8080"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      NODE_ENV: production
+      # Fails fast with a clear message instead of booting with a guessable secret.
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET in .env (openssl rand -base64 48)}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true

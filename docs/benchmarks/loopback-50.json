@@ -1,0 +1,155 @@
+{
+  "generatedAt": "2026-10-16T18:03:59.359Z",
+  "environment": {
+    "node": "v22.22.0",
+    "platform": "linux 6.18.44-fc-v139",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cores": 2,
+    "mode": "embedded-loopback"
+  },
+  "parameters": {
+    "clients": 50,
+    "commands": 150,
+    "intervalMs": 40,
+    "driftSeconds": 24,
+    "warmupSeconds": 12,
+    "races": 25,
+    "delayMs": 0,
+    "jitterMs": 0,
+    "out": "/tmp/claude-0/-home-claude/66965aeb-59f7-5f67-afbb-fae5bf353e96/scratchpad/bench-50.json"
+  },
+  "requirements": {
+    "propagationP95Ms": 250,
+    "driftMaxMs": 500,
+    "minClients": 10
+  },
+  "propagationMs": {
+    "n": 7350,
+    "min": 0.61865234375,
+    "mean": 1.3021730508609695,
+    "p50": 1.176513671875,
+    "p90": 1.726318359375,
+    "p95": 2.227783203125,
+    "p99": 3.6728515625,
+    "max": 4.72412109375,
+    "lost": 0
+  },
+  "echoRttMs": {
+    "n": 150,
+    "min": 0.689697265625,
+    "mean": 1.3031477864583334,
+    "p50": 1.185302734375,
+    "p90": 1.671630859375,
+    "p95": 2.390380859375,
+    "p99": 3.434326171875,
+    "max": 4.490966796875
+  },
+  "clockOffsetErrorMs": {
+    "n": 50,
+    "min": 0.1830568702648634,
+    "mean": 0.4337951818653255,
+    "p50": 0.4143284387582753,
+    "p90": 0.6101184874564751,
+    "p95": 0.7120426187693738,
+    "p99": 0.8005971708389552,
+    "max": 0.8005971708389552
+  },
+  "drift": {
+    "initialWorstMs": 1196.9804964149523,
+    "convergedAfterSec": 0.250766845703125,
+    "hardSeeks": 31,
+    "steadyAbsMs": {
+      "n": 2450,
+      "min": 0.02648730443866043,
+      "mean": 48.15745766835337,
+      "p50": 44.58321862879444,
+      "p90": 96.90886825293887,
+      "p95": 103.95540073595555,
+      "p99": 112.58743825679574,
+      "max": 114.97975874051747
+    },
+    "spreadMs": {
+      "n": 49,
+      "min": 164.8495532542782,
+      "mean": 170.86947352337128,
+      "p50": 170.86934227614847,
+      "p90": 175.88574018006398,
+      "p95": 176.38661277948842,
+      "p99": 176.88777412378442,
+      "max": 176.88777412378442
+    }
+  },
+  "checks": [
+    {
+      "name": "concurrent users in one room",
+      "pass": true,
+      "detail": "50 joined (requirement >= 10)"
+    },
+    {
+      "name": "all clients agree on membership",
+      "pass": true,
+      "detail": "each sees 50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50"
+    },
+    {
+      "name": "clock offset error",
+      "pass": true,
+      "detail": "p50 0.41 ms, p95 0.71 ms, max 0.80 ms (bound = rtt/2)"
+    },
+    {
+      "name": "propagation p95",
+      "pass": true,
+      "detail": "2.23 ms (requirement <= 250 ms)"
+    },
+    {
+      "name": "no lost command deliveries",
+      "pass": true,
+      "detail": "0 lost of 7350"
+    },
+    {
+      "name": "steady-state drift",
+      "pass": true,
+      "detail": "max 114.98 ms, p95 103.96 ms (requirement <= 500 ms)"
+    },
+    {
+      "name": "inter-client spread",
+      "pass": true,
+      "detail": "max 176.89 ms"
+    },
+    {
+      "name": "all clients converge to one state after simultaneous commands",
+      "pass": true,
+      "detail": "25/25 rounds fully consistent"
+    },
+    {
+      "name": "state sequence numbers strictly increasing at every client",
+      "pass": true,
+      "detail": "no reordering or duplicates applied"
+    },
+    {
+      "name": "room pauses for a stalled member and resumes together",
+      "pass": true,
+      "detail": "hold reached all clients in 5.47 ms; resumed: true"
+    },
+    {
+      "name": "reconnect keeps identity and recovers missed state",
+      "pass": true,
+      "detail": "same seat: true, caught up on missed seek: true, rejoined in 358.80 ms (incl. clock burst)"
+    },
+    {
+      "name": "seat not duplicated",
+      "pass": true,
+      "detail": "members seen: 50"
+    },
+    {
+      "name": "late joiner snaps to the room position",
+      "pass": true,
+      "detail": "within 500 ms after 99 ms (started 100 s behind)"
+    },
+    {
+      "name": "host leaves -> oldest remaining member becomes host, everyone agrees",
+      "pass": true,
+      "detail": "new host elected 1560 ms after disconnect (grace 1500 ms)"
+    }
+  ],
+  "passed": true
+}

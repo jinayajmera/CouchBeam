@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 # ── build stage: install everything, build client + server ───────────────
-FROM node:22-alpine AS build
+FROM node:25-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY shared/package.json shared/
@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # ── runtime stage: production deps only, non-root ────────────────────────
-FROM node:22-alpine
+FROM node:25-alpine
 ENV NODE_ENV=production \
     PORT=8080 \
     HOST=0.0.0.0 \

@@ -1,0 +1,13 @@
+{
+  "name": "Couchbeam",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "postCreateCommand": "cp -n .env.example .env && npm ci",
+  "forwardPorts": [5173, 8080],
+  "portsAttributes": {
+    "5173": { "label": "Client (Vite)", "onAutoForward": "openBrowser" },
+    "8080": { "label": "Server (HTTP + WS)" }
+  },
+  "customizations": {
+    "vscode": { "extensions": ["dbaeumer.vscode-eslint", "vitest.explorer"] }
+  }
+}

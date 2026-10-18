@@ -21,6 +21,12 @@ export function RoomView() {
     return () => clearTimeout(id);
   }, [toast]);
 
+  useEffect(() => {
+    const on = (e: Event) => setTab((e as CustomEvent<Tab>).detail);
+    window.addEventListener('couchbeam:tab', on);
+    return () => window.removeEventListener('couchbeam:tab', on);
+  }, []);
+
   const openPolls = room.polls.filter((p) => p.open).length;
   const tabs: [Tab, string, number?][] = [
     ['chat', 'Chat'],

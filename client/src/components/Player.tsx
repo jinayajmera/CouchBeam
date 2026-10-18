@@ -141,6 +141,8 @@ export function Player() {
   const { stats, needsGesture, resume } = useSyncEngine(client, videoRef, media?.src ?? null);
   const [momentOpen, setMomentOpen] = useState(false);
   const [momentText, setMomentText] = useState('');
+  const [vid, setVid] = useState<'loading' | 'ready' | 'error'>('loading');
+  useEffect(() => setVid('loading'), [media?.src]);
   useTick(250);
 
   const v = videoRef.current;
@@ -169,12 +171,27 @@ export function Player() {
     <section className="player card">
       <div className="stage" ref={wrapRef}>
         {media ? (
-          <video ref={videoRef} src={media.src} playsInline preload="auto" className="video" />
+          <video
+            ref={videoRef}
+            src={media.src}
+            playsInline
+            preload="auto"
+            className="video"
+            onLoadedData={() => setVid('ready')}
+            onError={() => setVid('error')}
+          />
         ) : (
           <div className="empty-stage">
             <h2>Nothing on yet</h2>
             <p>Pick a title from <b>Discover</b> and press play. Everyone in the room sees it start on the same frame.</p>
+            <button className="primary" onClick={() => window.dispatchEvent(new CustomEvent('couchbeam:tab', { detail: 'discover' }))}>
+              Choose a movie
+            </button>
           </div>
+        )}
+        {media && vid === 'loading' && <div className="banner">Loading video…</div>}
+        {media && vid === 'error' && (
+          <div className="banner">Couldn&apos;t load this video. Your network may be blocking it. Try another title or another network.</div>
         )}
         <ReactionLayer />
         {media && <Hud stats={stats} />}

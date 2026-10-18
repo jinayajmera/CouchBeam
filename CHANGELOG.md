@@ -14,3 +14,12 @@ All notable changes to this project are documented here. Format follows [Keep a 
 - **Moments**: room-voted timestamp bookmarks, **Highlight Reel** playback, **Reaction Heatmap** on the seek bar, **Spoiler Shield** time-locked chat, live **Sync Health HUD**.
 - Benchmark script (propagation percentiles, drift, races, reconnect, late join, host failover) and 52 unit tests.
 - Docker image, CI (typecheck, tests, build, benchmark, gitleaks, CodeQL), Dependabot.
+
+## [0.1.1]
+### Fixed
+- Invite link no longer stays in the address bar after leaving a room.
+- When a video ends with an empty queue, the room now stays at the end instead of jumping back.
+- Clear messages when the server is unreachable or a video cannot load; error screen instead of a blank page.
+### Added
+- Offline "Sync Test Card" demo clips (client/public/media) and HTTP range support for seeking.
+- `npm run demo` to build and serve the app on one port.

@@ -7,7 +7,7 @@
 **Watch together. Frame for frame.**
 Synchronized watch parties with a drift engine, time-locked chat and a crowd-sourced highlight reel.
 
-![CI](https://github.com/jinayajmera/CouchBeam/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/OWNER/couchbeam/actions/workflows/ci.yml/badge.svg)
 ![Node](https://img.shields.io/badge/node-%E2%89%A520.12-5fa04e?logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61dafb?logo=react&logoColor=black)
@@ -212,8 +212,8 @@ sequenceDiagram
 ### Local development
 
 ```bash
-git clone https://github.com/jinayajmera/CouchBeam.git
-cd CouchBeam
+git clone https://github.com/OWNER/couchbeam.git
+cd couchbeam
 
 cp .env.example .env          # all values are dummies; dev works as-is
 npm install

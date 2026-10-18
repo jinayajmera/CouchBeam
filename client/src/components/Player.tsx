@@ -142,7 +142,9 @@ export function Player() {
   const [momentOpen, setMomentOpen] = useState(false);
   const [momentText, setMomentText] = useState('');
   const [vid, setVid] = useState<'loading' | 'ready' | 'error'>('loading');
-  useEffect(() => setVid('loading'), [media?.src]);
+  useEffect(() => {
+    setVid('loading');
+  }, [media?.src]);
   useTick(250);
 
   const v = videoRef.current;
@@ -191,7 +193,7 @@ export function Player() {
         )}
         {media && vid === 'loading' && <div className="banner">Loading video…</div>}
         {media && vid === 'error' && (
-          <div className="banner">Couldn&apos;t load this video. Your network may be blocking it. Try another title or another network.</div>
+          <div className="banner">Couldn&apos;t load this video. Your network may be blocking it. Pick a &quot;Sync Test Card&quot; in Discover: those play offline.</div>
         )}
         <ReactionLayer />
         {media && <Hud stats={stats} />}

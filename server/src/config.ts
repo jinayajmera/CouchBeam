@@ -57,7 +57,7 @@ export function loadConfig(overrides: Partial<Config> = {}): Config {
     host: process.env.HOST ?? '0.0.0.0',
     logLevel: ['debug', 'info', 'warn', 'error', 'silent'].includes(level) ? level : 'info',
     sessionSecret: secret,
-    corsOrigins: (process.env.CORS_ORIGINS ?? 'http://localhost:5173,http://localhost:8080')
+    corsOrigins: (process.env.CORS_ORIGINS ?? 'http://localhost:5173,http://localhost:8080,http://127.0.0.1:5173,http://127.0.0.1:8080')
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean),

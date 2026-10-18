@@ -34,6 +34,15 @@ export type Intent =
 const SESSION_KEY = 'couchbeam:session';
 const FATAL = new Set(['no_such_room', 'room_full', 'server_full']);
 
+/** Back to the plain address, so a dead room's invite link is not left in the address bar. */
+function resetUrl(): void {
+  try {
+    if (location.pathname !== '/') history.replaceState(null, '', '/');
+  } catch {
+    /* ignore */
+  }
+}
+
 /** High-resolution wall clock (ms). Date.now() is only 1 ms resolution and can step; this cannot. */
 export const localNow = (): number => performance.timeOrigin + performance.now();
 
@@ -131,6 +140,7 @@ export class RoomClient {
     this.ws?.close();
     this.ws = null;
     if (sendLeave) {
+      resetUrl();
       try {
         sessionStorage.removeItem(SESSION_KEY);
       } catch {
@@ -265,6 +275,7 @@ export class RoomClient {
         if (FATAL.has(msg.code)) {
           this.intentional = true;
           this.ws?.close();
+          resetUrl();
           try {
             sessionStorage.removeItem(SESSION_KEY);
           } catch {

@@ -9,6 +9,41 @@ import type { MediaItem } from './types';
 const G = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample';
 
 export const CATALOG: MediaItem[] = [
+  // Offline demo clips: served from this project (client/public/media), so they play with no internet access.
+  // The on-screen timer makes it easy to SEE that every viewer is on the same frame.
+  {
+    id: 'demo-sync-60',
+    title: 'Sync Test Card (60 s)',
+    year: 2026,
+    categories: ['Demo', 'Short'],
+    durationSec: 60,
+    description: 'Offline test card with a running timer. Plays with no internet, ideal for showing sync.',
+    src: '/media/demo-sync-60.webm',
+    rating: 8.0,
+    tint: ['#1f6f8b', '#f2b441'],
+  },
+  {
+    id: 'demo-sync-30',
+    title: 'Sync Test Card (30 s)',
+    year: 2026,
+    categories: ['Demo', 'Short'],
+    durationSec: 30,
+    description: 'A 30 second offline test card with a running timer.',
+    src: '/media/demo-sync-30.webm',
+    rating: 7.9,
+    tint: ['#6a3d9a', '#f2b441'],
+  },
+  {
+    id: 'demo-sync-15',
+    title: 'Sync Test Card (15 s)',
+    year: 2026,
+    categories: ['Demo', 'Short'],
+    durationSec: 15,
+    description: 'A 15 second offline test card. Great for showing a video ending and the queue advancing.',
+    src: '/media/demo-sync-15.webm',
+    rating: 7.8,
+    tint: ['#3b7d3a', '#f2b441'],
+  },
   {
     id: 'big-buck-bunny',
     title: 'Big Buck Bunny',

@@ -409,7 +409,11 @@ export class Room {
     if (this.endedKey === key) return; // several clients report the end at once; act once
     this.endedKey = key;
     if (!this.advance(null)) {
-      this.commit({ status: 'paused', hold: false, pos: this.state.pos, anchor: this.deps.now() }, null);
+      // Nothing queued: park the room at where the title actually ended (not at the stale position of the
+      // last play/seek, which would yank every player backwards), clamped to the catalog length.
+      const length = this.deps.getMedia(mediaId)?.durationSec ?? Infinity;
+      const endPos = Math.min(this.expectedPos(), length);
+      this.commit({ status: 'paused', hold: false, pos: endPos, anchor: this.deps.now() }, null);
     }
   }
 

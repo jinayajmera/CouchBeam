@@ -18,6 +18,8 @@ const MIME: Record<string, string> = {
   '.png': 'image/png',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
   '.map': 'application/json',
 };
 
@@ -26,7 +28,7 @@ const CSP = [
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
-  'media-src https: blob:',
+  "media-src 'self' https: blob:",
   "connect-src 'self' ws: wss:",
   "frame-ancestors 'none'",
   "base-uri 'none'",
@@ -77,11 +79,11 @@ export async function startServer(overrides: Partial<Config> = {}): Promise<Runn
       items = fuzzySearch(items, q, (m) => `${m.title} ${m.categories.join(' ')} ${m.description}`);
       return json(res, 200, items);
     }
-    if (cfg.clientDist) return serveStatic(url.pathname, res);
+    if (cfg.clientDist) return serveStatic(url.pathname, req, res);
     return json(res, 404, { error: 'not_found' });
   }
 
-  function serveStatic(pathname: string, res: ServerResponse): void {
+  function serveStatic(pathname: string, req: IncomingMessage, res: ServerResponse): void {
     const root = cfg.clientDist!;
     let decoded: string;
     try {
@@ -95,14 +97,31 @@ export async function startServer(overrides: Partial<Config> = {}): Promise<Runn
     if (!existsSync(file) || statSync(file).isDirectory()) file = join(root, 'index.html'); // SPA fallback
     if (!existsSync(file)) return json(res, 404, { error: 'client_not_built' });
     const isHtml = file.endsWith('.html');
-    res.writeHead(200, {
+    const size = statSync(file).size;
+    const headers: Record<string, string | number> = {
       'content-type': MIME[extname(file)] ?? 'application/octet-stream',
       'cache-control': isHtml ? 'no-cache' : 'public, max-age=31536000, immutable',
       'content-security-policy': CSP,
       'x-content-type-options': 'nosniff',
       'referrer-policy': 'no-referrer',
       'x-frame-options': 'DENY',
-    });
+      'accept-ranges': 'bytes',
+    };
+    // HTTP Range: browsers need it to seek inside a video without re-downloading it.
+    const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range ?? '');
+    if (range && size > 0) {
+      let start = range[1] === '' ? Math.max(0, size - Number(range[2])) : Number(range[1]);
+      let end = range[1] === '' || range[2] === '' ? size - 1 : Math.min(Number(range[2]), size - 1);
+      if (!Number.isFinite(start) || !Number.isFinite(end) || start > end || start >= size) {
+        res.writeHead(416, { 'content-range': `bytes */${size}` });
+        return void res.end();
+      }
+      start = Math.max(0, start);
+      end = Math.min(end, size - 1);
+      res.writeHead(206, { ...headers, 'content-range': `bytes ${start}-${end}/${size}`, 'content-length': end - start + 1 });
+      return void createReadStream(file, { start, end }).pipe(res);
+    }
+    res.writeHead(200, { ...headers, 'content-length': size });
     createReadStream(file).pipe(res);
   }
 

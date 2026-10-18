@@ -277,6 +277,18 @@ describe('queue, polls, chat', () => {
     expect(room.snapshot().queue.map((q) => q.mediaId)).toEqual(['big-buck-bunny']);
   });
 
+  it('when a title ends with an empty queue the room parks at the end, not at the last play/seek position', () => {
+    const room = mkRoom();
+    const a = join(room, 'Ana');
+    room.handle(a.id, { t: 'setMedia', mediaId: 'for-bigger-fun' }); // 60 s
+    room.handle(a.id, { t: 'play', pos: 0 });
+    room.handle(a.id, { t: 'seek', pos: 10 });
+    clock += 70_000; // played well past the end
+    room.handle(a.id, { t: 'ended', mediaId: 'for-bigger-fun' });
+    expect(room.state.status).toBe('paused');
+    expect(room.state.pos).toBe(60); // clamped to the title length, never back at 10
+  });
+
   it('polls: one changeable vote per member, closeable by creator/host only', () => {
     const room = mkRoom();
     const a = join(room, 'Ana'); const b = join(room, 'Ben'); const c = join(room, 'Cy');

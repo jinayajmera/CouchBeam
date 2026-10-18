@@ -29,7 +29,9 @@ export function ChatPanel() {
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const bottom = useRef<HTMLDivElement>(null);
 
-  useEffect(() => bottom.current?.scrollIntoView({ block: 'end' }), [room.chat.length]);
+  useEffect(() => {
+    bottom.current?.scrollIntoView({ block: 'end' });
+  }, [room.chat.length]);
 
   /** A message is "from the future" if its author was further into the SAME title than you are. */
   const ahead = (m: ChatMessage): boolean =>

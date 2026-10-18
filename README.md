@@ -7,12 +7,12 @@
 **Watch together. Frame for frame.**
 Synchronized watch parties with a drift engine, time-locked chat and a crowd-sourced highlight reel.
 
-![CI](https://github.com/OWNER/couchbeam/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/jinayajmera/couchbeam/actions/workflows/ci.yml/badge.svg)
 ![Node](https://img.shields.io/badge/node-%E2%89%A520.12-5fa04e?logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61dafb?logo=react&logoColor=black)
 ![WebSocket](https://img.shields.io/badge/transport-WebSocket%20(ws)-f2b441)
-![Tests](https://img.shields.io/badge/tests-52%20passing-7bd6a0)
+![Tests](https://img.shields.io/badge/tests-53%20passing-7bd6a0)
 ![Benchmark](https://img.shields.io/badge/p95%20propagation-%3C250%20ms-7bd6a0)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -30,7 +30,7 @@ Create a room, share a 6-character code or an invite link, and everyone's video 
 | --- | --- |
 | **Moments + Highlight Reel** | Anyone can bookmark the exact second they're watching. Bookmarks within 3 s of each other merge into votes for the same Moment. Hit **Highlight reel** and the room's top-voted Moments replay as short, synchronized clips in story order. |
 | **Reaction Heatmap** | Emoji reactions are bucketed by *video time* and painted onto the seek bar as a heat strip, so you can see where the room gasped, laughed or screamed. |
-| **Spoiler Shield** | Every chat message carries the sender's playhead. If someone is further into the movie than you, their message is blurred behind "written at 41:12, ahead of you" until you choose to reveal it. |
+| **Spoiler Shield** | Every chat message carries the sender's playhead. If someone is further into the movie than you, their message is hidden behind "written at 41:12, ahead of you" until you choose to reveal it. |
 | **Scheduled starts** | Play/seek commands carry a server start time ~200 ms in the future, so a viewer 5 ms away and a viewer 80 ms away begin on the same frame. |
 | **Buffering hold** | If one person stalls, the room pauses at the same spot and resumes together once they recover (capped at 8 s so nobody holds the room hostage). |
 | **Live Sync Health HUD** | Click the pill on the player to see your drift, RTT, clock-sync error, hard-seek count and the room's worst drift. |
@@ -58,7 +58,7 @@ Create a room, share a 6-character code or an invite link, and everyone's video 
 | Server | Node 20+/22, TypeScript, [`ws`](https://github.com/websockets/ws) | Raw WebSockets, no framing overhead ([ADR 0001](docs/adr/0001-raw-websockets-over-socketio.md)) |
 | Protocol | zod discriminated union shared by client + server | One schema is both validator and type |
 | State | In-memory rooms behind a transport-agnostic `Room` class | Hot, tiny, short-lived ([ADR 0003](docs/adr/0003-in-memory-rooms-first.md)) |
-| Tests | Vitest (52 unit tests) + the benchmark's 14 scenario checks | Pure sync math and room logic are unit-tested without sockets |
+| Tests | Vitest (53 unit tests) + the benchmark's 14 scenario checks | Pure sync math and room logic are unit-tested without sockets |
 | Packaging | npm workspaces, tsup, multi-stage Docker, GitHub Actions | |
 
 > **Not in v0.1:** Redis Pub/Sub and PostgreSQL. They are listed in `.env.example` as `[RESERVED]` and the scale-out design is written up in [ADR 0003](docs/adr/0003-in-memory-rooms-first.md). v0.1 is a single node.
@@ -212,16 +212,16 @@ sequenceDiagram
 ### Local development
 
 ```bash
-git clone https://github.com/OWNER/couchbeam.git
-cd couchbeam
+git clone https://github.com/jinayajmera/couchbeam.git
+cd CouchBeam
 
 cp .env.example .env          # all values are dummies; dev works as-is
 npm install
 
-npm run dev                   # server :8080 + Vite client :5173
+npm run demo                   # server :8080 + Vite client :5173
 ```
 
-Open <http://localhost:5173>, create a room, then open the invite link in a **second browser window (or a private window / another device)**, join with another name and pick a title in **Discover**.
+Open <http://localhost:8080>, create a room, then open the invite link in a **second browser window (or a private window / another device)**, join with another name and pick a title in **Discover**.
 
 > Testing from a phone or another machine on your LAN: run `npm run dev -w client -- --host`, and add that origin (for example `http://192.168.1.20:5173`) to `CORS_ORIGINS` in `.env`.
 
@@ -241,7 +241,7 @@ docker compose up --build     # http://localhost:8080
 | `npm run dev` | Server (watch) + client (HMR) |
 | `npm run build` / `npm start` | Production build; serve with `CLIENT_DIST=client/dist` |
 | `npm run typecheck` | Strict TypeScript across all packages and scripts |
-| `npm test` | 52 unit tests (sync math, fuzzy search, room state machine) |
+| `npm test` | 53 unit tests (sync math, fuzzy search, room state machine) |
 | `npm run bench` | Embedded-server latency / drift / race benchmark (see below) |
 | `npm run bench:remote -- ws://HOST:8080/ws` | Same benchmark against a running server on your network |
 

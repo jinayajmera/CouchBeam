@@ -3,7 +3,7 @@
 **Status:** accepted
 
 ## Context
-Playback commands have a 250 ms p95 propagation budget and the protocol is tiny (about 30 message types, all JSON, all under 1 KiB).
+Playback commands have a 250 ms p95 propagation budget and the protocol is tiny (26 client and 14 server message types, all JSON, typically well under 1 KiB; the largest is the join snapshot, bounded by the 100-message chat cap).
 
 ## Decision
 Use the `ws` library directly with a zod-validated message union shared by client and server.

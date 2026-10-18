@@ -171,7 +171,11 @@ export class RoomClient {
     ws.onclose = () => {
       clearInterval(this.pingTimer);
       if (this.intentional || this.ws !== ws) return;
-      this.set({ status: this.snap.room ? 'reconnecting' : 'connecting' });
+      if (this.snap.room) this.set({ status: 'reconnecting' });
+      else if (this.attempt >= 2) {
+        // Never got in after several tries: tell the user instead of spinning forever.
+        this.set({ status: 'connecting', error: "Can't reach the server. Check that it is running (npm run dev) or, on a hosted site, that CORS_ORIGINS matches this address. Still retrying…" });
+      } else this.set({ status: 'connecting' });
       const delay = Math.min(5000, 400 * 2 ** this.attempt++) * (0.7 + Math.random() * 0.6);
       this.retryTimer = setTimeout(() => this.open(), delay);
     };

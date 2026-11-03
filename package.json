@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/node": "^22.10.0",
     "@types/ws": "^8.5.13",
-    "concurrently": "^9.1.0",
+    "concurrently": "^10.0.6",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0",
